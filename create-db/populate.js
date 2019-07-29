@@ -4,6 +4,14 @@ var fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb://localhost:27017/hackathon";
 
+const locais = [
+	"R. Dr. Amadeu Sachi, 400 - Vila Formosa, Jundiaí - SP, 13214-280",
+	"Av. Doroty Nano Martinasso, s/n - Vila Hortolandia, Jundiaí - SP, 13214-010",
+	"R. Ítalo Primo Belini, 235 - Jardim Florestal, Jundiaí - SP, 13215-660",
+	"Av. Paulo Benassi, 215 - Torres de São José, Jundiaí - SP, 13214-175",
+	"Av. Armando Giassetti, 300 - Engordadouro, Jundiaí - SP, 13214-470"
+];
+
 fs.readFile('data/2019.csv', 'utf8', function (err, contents) {
     // console.log(err);
     // console.log(contents);
@@ -23,7 +31,8 @@ fs.readFile('data/2019.csv', 'utf8', function (err, contents) {
 					marca: item.make,
 					modelo: item.model + " " + version,
 					ano: item.year,
-					valor: randomValue(999) * 100
+					valor: randomValue(999) * 100,
+					local: locais[randomValue(5) - 1]
 				}
 				db.collection('veiculos').insertOne(veiculo);
 				console.log("Vehicle saved: "+ JSON.stringify(veiculo));
