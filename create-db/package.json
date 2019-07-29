@@ -1,0 +1,10 @@
+{
+  "name": "populate",
+  "version": "0.0.0",
+  "main": "populate.js",
+  "dependencies": {
+    "csvjson": "~5.1.0",
+    "fs": "0.0.1-security",
+    "mongodb": "^3.3.0-beta2"
+  }
+}
