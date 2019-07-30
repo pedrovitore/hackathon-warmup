@@ -46,14 +46,8 @@ public class VeiculoController {
 		//Itera sobre todos os veículos do banco e preenche com as informações encontradas dele na PROCOB Api.
 		lista.forEach((Veiculo veiculo) -> {
 			//Procura por essa placa no PROCOB
-			ProcobVeiculoResponse veiculoResponse = service.getDadosVeiculo(veiculo.getPlaca(), "");
+			ProcobVeiculoResponse veiculoResponse = service.getDadosVeiculo(veiculo.getPlaca());
 			
-			//getDadosVeículo PRECISA FAZER FILTRO PELA PLACA E CHASSI!!!!
-			//IMPLEMENTAR JÁ!!!!!!!
-			//IMPLEMENTAR JÁ!!!!!!!
-			//IMPLEMENTAR JÁ!!!!!!!
-			//IMPLEMENTAR JÁ!!!!!!!
-			//IMPLEMENTAR JÁ!!!!!!!
 			
 			ProcobContentResponse content = veiculoResponse.getContent();
 			

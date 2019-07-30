@@ -35,10 +35,17 @@ public class Procob {
 
     public static final String HOST = "https://api.procob.com";
     
-    public ProcobVeiculoResponse getDadosVeiculo(String placa, String chassi) {
+    public ProcobVeiculoResponse getDadosVeiculo(String placa) {
     	UriComponents uriComponents = UriComponentsBuilder.newInstance()
-			      .scheme("https").host("api.procob.com")
-			      .path("/veiculos/v2/V0001").query("bin=SIM").query("dpvat=SIM").query("gravames=SIM").query("leilao=SIM").query("precificador=SIM").query("sinistro=SIM").buildAndExpand();
+			      .scheme("https").host("api.procob.com").path("/veiculos/v2/V0001")
+			      .query("bin=SIM")
+			      .query("dpvat=SIM")
+			      .query("gravames=SIM")
+			      .query("leilao=SIM")
+			      .query("precificador=SIM")
+			      .query("sinistro=SIM")
+			      .query("placa="+placa)
+			      .buildAndExpand();
 			 
 		ResponseEntity<ProcobVeiculoResponse> response = Procob.getResponse(uriComponents.toUriString());
 		
