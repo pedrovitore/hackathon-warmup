@@ -11,9 +11,19 @@ public class Veiculo {
     private Integer ano;
     private Double valor;
     private String local;
+	private String placa;
 
     @Id
     public String id;
+    
+    public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
 
     public String getMarca() {
         return marca;
