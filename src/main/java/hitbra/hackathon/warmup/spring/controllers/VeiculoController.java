@@ -69,7 +69,7 @@ public class VeiculoController {
 
 	@PutMapping("/comprar/{id}")
 	@ApiOperation("Compra um veículo pelo seu ID. Sujeito a verificação de disponibilidade do veículo antes da compra.")
-	public ResponseEntity<?> update(@PathVariable("id") @ApiParam(value = "ID do veículo a ser comprado.", required = true) @RequestParam(value = "marca", required = false) String id) {
+	public ResponseEntity<?> update(@PathVariable("id") @ApiParam(value = "ID do veículo a ser comprado.", required = true) String id) {
 		Veiculo veiculo = repo.findOne(id);
 		
 		if ( veiculo == null ) {
