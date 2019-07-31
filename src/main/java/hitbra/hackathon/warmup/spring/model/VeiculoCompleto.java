@@ -6,12 +6,24 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class VeiculoCompleto {
 
-	private Veiculo veiculo;
+	private String marca;
+	
+
+	private String modelo;
+	private int ano;
+	private double valorDeVenda;
+	private String logradouro;
+	private String numero;
+	private String bairro;
+	private String cidade;
+	private String estado;
+	
+	
 	
 	private Boolean possuiGravame;
 	
 	//Formata o resultado da data no arquivo JSON retornado pela API. Se não adicionar isso o spring retorna um número inteiro.
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")	
 	private Date dataVigenciaContratoGravame;
 	
 	private Boolean carroDeLeilao;
@@ -23,14 +35,7 @@ public class VeiculoCompleto {
 	
 	private double preco_medio;
 
-	public Veiculo getVeiculo() {
-		return veiculo;
-	}
-
-	public void setVeiculo(Veiculo veiculo) {
-		//Adicionar aqui o logradouro completo como atributo nessa classe.
-		this.veiculo = veiculo;
-	}
+	
 
 	public Boolean getPossuiGravame() {
 		return possuiGravame;
@@ -87,7 +92,77 @@ public class VeiculoCompleto {
 	public void setPreco_medio(double preco_medio) {
 		this.preco_medio = preco_medio;
 	}
-	
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public int getAno() {
+		return ano;
+	}
+
+	public void setAno(int ano) {
+		this.ano = ano;
+	}
+
+	public double getValorDeVenda() {
+		return valorDeVenda;
+	}
+
+	public void setValorDeVenda(double valorDeVenda) {
+		this.valorDeVenda = valorDeVenda;
+	}
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 	
 	
 }

@@ -34,10 +34,13 @@ public class VeiculoController {
 
 	@GetMapping("/")
 	public List<VeiculoCompleto> getByMarca(
-			@ApiParam(value = "Marca do veículo", required = true) @RequestParam(value = "marca") String marca) {
+			@ApiParam(value = "Marca do veículo", required = false) @RequestParam(value = "marca", required = false) String marca,
+			@ApiParam(value = "Ano do veículo", required = false) @RequestParam(value = "ano", required = false) String modelo,
+			@ApiParam(value = "Cidade do veículo", required = false) @RequestParam(value = "cidade", required = false) String cidade) {
 
 		// Faz a consulta no banco de dados
-		List<Veiculo> lista = repo.findByMarca(marca);
+		List<Veiculo> lista = repo.findByMarcaOrAnoOrLocal(marca, modelo, cidade);
+		
 
 		// Popula a lista que será retornada ao final da api
 		List<VeiculoCompleto> listaFinal = popularDadosVeiculo(lista);
@@ -59,9 +62,9 @@ public class VeiculoController {
 
 			// Instância de veiculoCompleto que será adicionada à listaFinal
 			VeiculoCompleto veiculoCompleto = new VeiculoCompleto();
-
-			// Veículo
-			veiculoCompleto.setVeiculo(veiculo);
+			
+			// Chama funçao veiculoCompleto
+			preencheVeiculo(veiculoCompleto, veiculo);
 
 			// Gravames
 			preencheGravames(veiculoCompleto, content);
@@ -174,5 +177,26 @@ public class VeiculoController {
 		} else {
 			veiculoCompleto.setPreco_medio(0.0);
 		}
+	}
+	public void preencheVeiculo (VeiculoCompleto veiculoCompleto, Veiculo veiculo) {
+		veiculoCompleto.setMarca(veiculo.getMarca());
+		veiculoCompleto.setModelo(veiculo.getModelo());
+		veiculoCompleto.setAno(veiculo.getAno());
+		veiculoCompleto.setValorDeVenda(veiculo.getValor());
+		String local = veiculo.getLocal();
+		String logradouro = local.split(",")[0];
+		String numero = local.split(",")[1].split("-")[0];
+		String bairro = local.split(",")[1].split("-")[1];
+		String cidade = local.split(",")[2].split("-")[0];
+		String estado = local.split(",")[2].split("-")[1];
+		veiculoCompleto.setLogradouro(logradouro);
+		veiculoCompleto.setNumero(numero);
+		veiculoCompleto.setBairro(bairro);
+		veiculoCompleto.setCidade(cidade);
+		veiculoCompleto.setEstado(estado);
+		
+		
+		
+		
 	}
 }
