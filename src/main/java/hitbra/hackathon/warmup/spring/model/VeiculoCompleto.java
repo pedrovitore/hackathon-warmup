@@ -2,11 +2,16 @@ package hitbra.hackathon.warmup.spring.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class VeiculoCompleto {
 
 	private Veiculo veiculo;
 	
 	private Boolean possuiGravame;
+	
+	//Formata o resultado da data no arquivo JSON retornado pela API. Se não adicionar isso o spring retorna um número inteiro.
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date dataVigenciaContratoGravame;
 	
 	private Boolean carroDeLeilao;
