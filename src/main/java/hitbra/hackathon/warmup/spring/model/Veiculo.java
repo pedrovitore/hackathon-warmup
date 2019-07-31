@@ -12,6 +12,7 @@ public class Veiculo {
     private Double valor;
     private String local;
 	private String placa;
+	private String status;
 
     @Id
     public String id;
@@ -64,4 +65,12 @@ public class Veiculo {
     public void setLocal(String local) {
         this.local = local;
     }
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

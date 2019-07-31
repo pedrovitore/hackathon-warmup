@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class VeiculoCompleto {
 
+	private String id;
 	private String marca;
 	
 
@@ -162,6 +163,14 @@ public class VeiculoCompleto {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

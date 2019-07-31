@@ -1,5 +1,20 @@
 package hitbra.hackathon.warmup.spring.controllers;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import hitbra.hackathon.warmup.spring.model.ProcobContentResponse;
 import hitbra.hackathon.warmup.spring.model.ProcobDadosGravamesResponse;
 import hitbra.hackathon.warmup.spring.model.ProcobDetalhesDpvatResponse;
@@ -9,18 +24,8 @@ import hitbra.hackathon.warmup.spring.model.VeiculoCompleto;
 import hitbra.hackathon.warmup.spring.repositories.VeiculoRepository;
 import hitbra.hackathon.warmup.spring.services.Procob;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -32,21 +37,55 @@ public class VeiculoController {
 	@Autowired
 	private Procob service;
 
-	@GetMapping("/")
+	@GetMapping("/pesquisar")
+	@ApiOperation("Busca em nossa base de dados por todos veículos disponíveis.")
 	public List<VeiculoCompleto> getByMarca(
-			@ApiParam(value = "Marca do veículo", required = false) @RequestParam(value = "marca", required = false) String marca,
-			@ApiParam(value = "Ano do veículo", required = false) @RequestParam(value = "ano", required = false) String modelo,
-			@ApiParam(value = "Cidade do veículo", required = false) @RequestParam(value = "cidade", required = false) String cidade) {
+			@ApiParam(value = "(Opcional) Filtra veículos pela marca.", required = false) @RequestParam(value = "marca", required = false) String marca,
+			@ApiParam(value = "(Opcional) Filtra veículos pelo ano.", required = false) @RequestParam(value = "ano", required = false) Integer ano,
+			@ApiParam(value = "(Opcional) Filtra veículos pela cidade.", required = false) @RequestParam(value = "cidade", required = false) String cidade) {
+
+		if (marca == null)
+			marca = ".*";
+		if (cidade == null) {
+			cidade = ".*";
+		} else {
+			cidade = ".*" + cidade + ".*";
+		}
 
 		// Faz a consulta no banco de dados
-		List<Veiculo> lista = repo.findByMarcaOrAnoOrLocal(marca, modelo, cidade);
-		
+		List<Veiculo> lista;
+		if (ano == null) {
+			lista = repo.findByMarcaRegexAndLocalRegexAndStatus(marca, cidade, "Disponível");
+		} else {
+			lista = repo.findByMarcaRegexAndAnoAndLocalRegexAndStatus(marca, ano, cidade, "Disponível");
+		}
 
 		// Popula a lista que será retornada ao final da api
 		List<VeiculoCompleto> listaFinal = popularDadosVeiculo(lista);
 
 		return listaFinal;
 
+	}
+
+	@PutMapping("/comprar/{id}")
+	@ApiOperation("Compra um veículo pelo seu ID. Sujeito a verificação de disponibilidade do veículo antes da compra.")
+	public ResponseEntity<?> update(@PathVariable("id") @ApiParam(value = "ID do veículo a ser comprado.", required = true) @RequestParam(value = "marca", required = false) String id) {
+		Veiculo veiculo = repo.findOne(id);
+		
+		if ( veiculo == null ) {
+			return ResponseEntity.ok().body("Carro não encontrado na base de dados. Por favor verifique se o ID foi informado corretamente.");
+		}
+		
+		System.out.println(veiculo.getStatus());
+		if (veiculo.getStatus().equals("Indisponível")) {
+			return ResponseEntity.ok().body("Este carro não se encontra mais disponível para venda.");
+		} else {
+			veiculo.setStatus("Indisponível");
+		}
+
+		repo.save(veiculo);
+		
+		return ResponseEntity.ok().body("Você acaba de comprar um " + veiculo.getModelo() + " por R$" + String.format("%.2f", veiculo.getValor()) + "." + System.lineSeparator() + "Parabéns!");
 	}
 
 	public List<VeiculoCompleto> popularDadosVeiculo(List<Veiculo> lista) {
@@ -62,7 +101,10 @@ public class VeiculoController {
 
 			// Instância de veiculoCompleto que será adicionada à listaFinal
 			VeiculoCompleto veiculoCompleto = new VeiculoCompleto();
-			
+
+			// Setta o id
+			veiculoCompleto.setId(veiculo.id);
+
 			// Chama funçao veiculoCompleto
 			preencheVeiculo(veiculoCompleto, veiculo);
 
@@ -178,7 +220,8 @@ public class VeiculoController {
 			veiculoCompleto.setPreco_medio(0.0);
 		}
 	}
-	public void preencheVeiculo (VeiculoCompleto veiculoCompleto, Veiculo veiculo) {
+
+	public void preencheVeiculo(VeiculoCompleto veiculoCompleto, Veiculo veiculo) {
 		veiculoCompleto.setMarca(veiculo.getMarca());
 		veiculoCompleto.setModelo(veiculo.getModelo());
 		veiculoCompleto.setAno(veiculo.getAno());
@@ -194,9 +237,6 @@ public class VeiculoController {
 		veiculoCompleto.setBairro(bairro);
 		veiculoCompleto.setCidade(cidade);
 		veiculoCompleto.setEstado(estado);
-		
-		
-		
-		
+
 	}
 }
